@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class BoardManager : MonoBehaviour
@@ -45,6 +46,7 @@ public class BoardManager : MonoBehaviour
 
     private bool IsAllPainting;
     private int CurPixelColorNum;
+    private string[,] PixelValues;
     private int[,] CurBoardPixelNum;
     private GameObject[,] CurBoardPixel;
 
@@ -57,12 +59,32 @@ public class BoardManager : MonoBehaviour
         PreBoardPixel = new Stack<PixelInfo>();
         CurPixelColorNum = -1;
         GenerateField();
+        InputPixelValues();
+        
     }
 
     void Update()
     {
         PaintingPixel();
         ReversePixel();
+    }
+
+    // 초기화 함수들
+    private void InputPixelValues()
+    {
+        StreamReader reader = new StreamReader(@"Assets/Resources/PixelColorValues.csv");
+        PixelValues = new string[PixelColors.Length, 3];
+        int _num = 0;
+        while (!reader.EndOfStream)
+        {
+            string[] values = reader.ReadLine().Split(',');
+            for (int i = 0; i < 3; i++)
+            {
+                PixelValues[_num, i] = values[i];
+                Debug.Log(PixelValues[_num, i]);
+            }
+            ++_num;
+        }
     }
 
     private void GenerateField()
@@ -84,6 +106,7 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    // 프로그램 진행 시 사용하는 함수들
     private void PaintingPixel()
     {
         if (Input.GetMouseButtonDown(0))
@@ -146,16 +169,7 @@ public class BoardManager : MonoBehaviour
         CurBoardPixel[_x, _y].GetComponent<SpriteRenderer>().sprite = PixelColors[_pixNum];
     }
 
-    public void SetPixelColor(int _num)
-    {
-        if (_num < PixelColors.Length)
-            CurPixelColorNum = _num;
-        else
-            IsAllPainting = !IsAllPainting;
-       
-    }
-
-    public void paintingFullPixel(int _x, int _y, int _prePixNum, int _nexPixNum)
+    private void paintingFullPixel(int _x, int _y, int _prePixNum, int _nexPixNum)
     {
         Debug.Log("Waiting...");
         Queue<Pixel> que = new Queue<Pixel>();
@@ -190,5 +204,34 @@ public class BoardManager : MonoBehaviour
             }
         }
         Debug.Log("End!");
+    }
+
+    public void SetPixelColor(int _num)
+    {
+        if (_num < PixelColors.Length)
+            CurPixelColorNum = _num;
+        else
+            IsAllPainting = !IsAllPainting;
+    }
+
+    public void CreateImageFiles()
+    {
+        Debug.Log("Writing Image . . .");
+        for (int i = 0; i < 3; i++)
+        {
+            StreamWriter textImage = new StreamWriter("Assets/Resources/CreatedImageText/Image_" + i+".csv");
+            for (int j = BoardSize - 1; j >= 0; j--)
+            {
+                string textLine = "";
+                for (int k = 0; k < BoardSize - 1; k++)
+                {
+                    textLine += PixelValues[CurBoardPixelNum[j, k], i] + ',';
+                }
+                textLine += PixelValues[CurBoardPixelNum[j, BoardSize - 1], i];
+                textImage.WriteLine(textLine);
+            }
+            textImage.Close();
+        }
+        Debug.Log("Writing Image is Complete ! ! !");
     }
 }
