@@ -17,4 +17,9 @@ public class ButtonManager : MonoBehaviour
         int _selectNum = int.Parse(gameObject.name.Split('_')[1]);
         GameBoard.SetPixelColor(_selectNum);
     }
+
+    public void OnIamgeWriteButtonClick()
+    {
+        GameBoard.CreateImageFiles();
+    }
 }
