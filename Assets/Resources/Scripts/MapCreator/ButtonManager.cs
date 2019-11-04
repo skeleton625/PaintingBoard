@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ButtonManager : MonoBehaviour
 {
@@ -54,6 +55,7 @@ public class ButtonManager : MonoBehaviour
         mainButtonObject.SetActive(true);
     }
 
+    /*
     public void writeTextData()
     {
         ObjectManager.writeText();
@@ -63,9 +65,15 @@ public class ButtonManager : MonoBehaviour
     {
         MapManager.readText();
     }
+    */
 
     public void resetMapButtonClick()
     {
         MapManager.isReset = true;
+    }
+
+    public void OnReGenerateImageButtonClick()
+    {
+        SceneManager.LoadScene("PaintBoard");
     }
 }
