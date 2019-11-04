@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BoardManager : MonoBehaviour
 {
@@ -39,6 +40,8 @@ public class BoardManager : MonoBehaviour
 
     [SerializeField]
     private int BoardSize;
+    [SerializeField]
+    private GameObject WaitingBoard;
     [SerializeField]
     private Sprite[] PixelColors;
     [SerializeField]
@@ -79,10 +82,7 @@ public class BoardManager : MonoBehaviour
         {
             string[] values = reader.ReadLine().Split(',');
             for (int i = 0; i < 3; i++)
-            {
                 PixelValues[_num, i] = values[i];
-                Debug.Log(PixelValues[_num, i]);
-            }
             ++_num;
         }
     }
@@ -219,7 +219,7 @@ public class BoardManager : MonoBehaviour
         Debug.Log("Writing Image . . .");
         for (int i = 0; i < 3; i++)
         {
-            StreamWriter textImage = new StreamWriter("Assets/Resources/CreatedImageText/Image_" + i+".csv");
+            StreamWriter textImage = new StreamWriter("CreatedImageText/Image_" + i+".csv");
             for (int j = BoardSize - 1; j >= 0; j--)
             {
                 string textLine = "";
@@ -233,5 +233,22 @@ public class BoardManager : MonoBehaviour
             textImage.Close();
         }
         Debug.Log("Writing Image is Complete ! ! !");
+        StartCoroutine(Move3DMapScene());
+    }
+
+    private IEnumerator Move3DMapScene()
+    {
+        string _filePath = @"CreatedImageData/resultImage.csv";
+        WaitingBoard.SetActive(true);
+        while(true)
+        {
+            System.IO.FileInfo _imageFile = new FileInfo(_filePath);
+            if (_imageFile.Exists)
+                break;
+            Debug.Log("Cycling...");
+            yield return new WaitForSeconds(5);
+        }
+        SceneManager.LoadScene("MapCreatorScene");
+        yield return null;
     }
 }
