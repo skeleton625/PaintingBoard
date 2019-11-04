@@ -112,6 +112,7 @@ public class ObjectManager : MonoBehaviour
         return false;
     }
 
+    /*
     public static void writeText()
     {
         StreamWriter dataType = new StreamWriter("map_data_type.csv", false);
@@ -152,4 +153,5 @@ public class ObjectManager : MonoBehaviour
         dataType.Close();
         data_rot.Close();
     }
+    */
 }
