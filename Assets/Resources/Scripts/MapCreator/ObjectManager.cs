@@ -23,8 +23,7 @@ public class ObjectManager : MonoBehaviour
     private static int[,] isSelected;
     private static GameObject[,] createdObject;
     /* 오브젝트 데이터들 */
-    private static Dictionary<string, GameObject> treeDictionary;
-    private static Dictionary<string, GameObject> stoneDictionary;
+    private static Dictionary<string, GameObject> objectDictionary;
 
     // Start is called before the first frame update
     void Start()
@@ -34,18 +33,17 @@ public class ObjectManager : MonoBehaviour
         isSelected = new int[blockCount, blockCount];
         createdObject = new GameObject[blockCount, blockCount];
         /* 나무, 돌 오브젝트 사전 초기화 */
-        treeDictionary = new Dictionary<string, GameObject>();
-        stoneDictionary = new Dictionary<string, GameObject>();
+        objectDictionary = new Dictionary<string, GameObject>();
         string inputObject;
         for (int i = 0; i < Trees.Length; i++)
         {
             inputObject = Trees[i].name;
-            treeDictionary.Add(inputObject, Trees[i]);
+            objectDictionary.Add(inputObject, Trees[i]);
         }
         for (int i = 0; i < Stones.Length; i++)
         {
             inputObject = Stones[i].name;
-            stoneDictionary.Add(inputObject, Stones[i]);
+            objectDictionary.Add(inputObject, Stones[i]);
         }
         for(int i = 0; i < blockCount; i++)
         {
@@ -54,14 +52,9 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-    public static GameObject getTree(string name)
+    public static GameObject getObject(string name)
     {
-        return treeDictionary[name];
-    }
-
-    public static GameObject getStone(string name)
-    {
-        return stoneDictionary[name];
+        return objectDictionary[name];
     }
 
     public static GameObject getObject(int x, int y)
