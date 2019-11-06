@@ -75,7 +75,7 @@ public class BoardManager : MonoBehaviour
     // 초기화 함수들
     private void InputPixelValues()
     {
-        StreamReader reader = new StreamReader(@"Assets/Resources/PixelColorValues.csv");
+        StreamReader reader = new StreamReader(@"Datas/PixelColorValues.csv");
         PixelValues = new string[PixelColors.Length, 3];
         int _num = 0;
         while (!reader.EndOfStream)
@@ -219,7 +219,7 @@ public class BoardManager : MonoBehaviour
         Debug.Log("Writing Image . . .");
         for (int i = 0; i < 3; i++)
         {
-            StreamWriter textImage = new StreamWriter("CreatedImageText/Image_" + i+".csv");
+            StreamWriter textImage = new StreamWriter("Datas/CreatedImageText/Image_" + i+".csv");
             for (int j = BoardSize - 1; j >= 0; j--)
             {
                 string textLine = "";
@@ -238,7 +238,7 @@ public class BoardManager : MonoBehaviour
 
     private IEnumerator Move3DMapScene()
     {
-        string _filePath = @"CreatedImageData/resultImage.csv";
+        string _filePath = @"Datas/CreatedImageData/prediction_type.csv";
         WaitingBoard.SetActive(true);
         while(true)
         {
