@@ -257,7 +257,7 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    private int transObjectNumber(float _inp, string color)
+    private int setObjectNumber(float _inp, string color)
     {
         int typeFront = 0;
         for(int i = 0; i < 6; i++)
@@ -269,18 +269,47 @@ public class MapManager : MonoBehaviour
             }
         }
 
-        Debug.Log(typeFront);
         if (typeFront == 1)
             return 14;
-        else if (_inp <= 0 || typeFront == 0)
-            return 0;
-        else if (_inp < 0.05)
-            return typeValues[typeFront - 2, 0];
-        else if (_inp < 0.08)
-            return typeValues[typeFront - 2, 1];
-        else if (_inp > 0.08)
-            return typeValues[typeFront - 2, 2];
+        else if(typeFront == 3)
+        {
+            if (_inp <= 0)
+                return 0;
+            else if (_inp < 0.05)
+                return typeValues[typeFront - 2, 0];
+            else if (_inp < 0.1)
+                return typeValues[typeFront - 2, 1];
+            else if (_inp < 0.15)
+                return typeValues[typeFront - 2, 2];
+            else if (_inp > 0.15)
+                return typeValues[typeFront - 2, 3];
+        }
+        else if (typeFront > 1)
+        {
+            if (_inp <= 0.1)
+                return 0;
+            else if (_inp < 0.15)
+                return typeValues[typeFront - 2, 1];
+            else if (_inp < 0.2)
+                return typeValues[typeFront - 2, 2];
+            else if (_inp > 0.25)
+                return typeValues[typeFront - 2, 0];
+        }
         return 0;
+    }
+
+    private Quaternion setObjectRotation(float _rot)
+    {
+        float _realRot = 0;
+        if (_rot <= 0)
+            _realRot = 0;
+        else if (_rot < 0.15)
+            _realRot = 90;
+        else if (_rot < 0.2)
+            _realRot = 180;
+        else if (_rot < 0.25)
+            _realRot = 270;
+        return Quaternion.AngleAxis(_realRot, new Vector3(0, 1, 0));
     }
 
     private void readText()
@@ -306,7 +335,7 @@ public class MapManager : MonoBehaviour
                 for (int j = 0; j < terrainSize - 1; j++)
                 {
                     Debug.Log(line_type[j]);
-                    int types = transObjectNumber(float.Parse(line_type[j]), line_preType[j]);
+                    int types = setObjectNumber(float.Parse(line_type[j]), line_preType[j]);
 
                     if (i%4 != 0 || j%4 != 0)
                         continue;
@@ -323,8 +352,8 @@ public class MapManager : MonoBehaviour
                     {
                         ObjectManager.setSelectedObject(x, z, types);
                         GameObject clone = Instantiate(ObjectManager.getObject(types+""),
-                                        new Vector3(i + 2, 4, j + 2),
-                                        Quaternion.EulerAngles(0f, float.Parse(line_rot[j]), 0f));
+                                        new Vector3(i + 2, 4, j + 2), Quaternion.identity);
+                        clone.transform.rotation = setObjectRotation(float.Parse(line_rot[j]));
                         clone.SetActive(true);
                         ObjectManager.setObject(clone, x, z);
                     }
