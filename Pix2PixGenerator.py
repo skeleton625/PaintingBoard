@@ -172,13 +172,13 @@ if __name__ == "__main__":
     loss_object = tf.keras.losses.BinaryCrossentropy(from_logits=True)
     pix2pix_generator = initialize_pix2pix()
     while True:
-        if os.path.isfile("CreatedImageText/Image_0.csv"):
+        if os.path.isfile("Datas/CreatedImageText/Image_0.csv"):
             print("Initiate Prediction by Generator")
-            input_csv0 = pd.read_csv("CreatedImageText/Image_0.csv", header=None)
+            input_csv0 = pd.read_csv("Datas/CreatedImageText/Image_0.csv", header=None)
             input_csv0 = pd.DataFrame.to_numpy(input_csv0)
-            input_csv1 = pd.read_csv("CreatedImageText/Image_1.csv", header=None)
+            input_csv1 = pd.read_csv("Datas/CreatedImageText/Image_1.csv", header=None)
             input_csv1 = pd.DataFrame.to_numpy(input_csv1)
-            input_csv2 = pd.read_csv("CreatedImageText/Image_2.csv", header=None)
+            input_csv2 = pd.read_csv("Datas/CreatedImageText/Image_2.csv", header=None)
             input_csv2 = pd.DataFrame.to_numpy(input_csv2)
 
             arr = np.array([input_csv0, input_csv1, input_csv2])
@@ -191,7 +191,7 @@ if __name__ == "__main__":
 
             pred = generate_image(pix2pix_generator, map_data_tensor)
             for i in range(2):
-                os.remove(r"CreatedImageText/Image_"+str(i)+".csv")
+                os.remove(r"Datas/CreatedImageText/Image_"+str(i)+".csv")
 
             pred = pred.numpy()
 
@@ -205,9 +205,9 @@ if __name__ == "__main__":
                     temp1[i][j] = pred[i][j][1]
                     temp2[i][j] = pred[i][j][2]
             print("Writing prediction")
-            f0 = open("CreatedImageData/prediction_type.csv", 'w', newline='')
-            f1 = open("CreatedImageData/prediction_rot.csv", 'w', newline='')
-            f2 = open("CreatedImageData/prediction_non.csv", 'w', newline='')
+            f0 = open("Datas/CreatedImageData/prediction_type.csv", 'w', newline='')
+            f1 = open("Datas/CreatedImageData/prediction_rot.csv", 'w', newline='')
+            f2 = open("Datas/CreatedImageData/prediction_non.csv", 'w', newline='')
             wr0 = csv.writer(f0)
             wr1 = csv.writer(f1)
             wr2 = csv.writer(f2)
