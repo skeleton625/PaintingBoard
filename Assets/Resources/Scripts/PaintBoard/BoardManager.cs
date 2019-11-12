@@ -47,15 +47,18 @@ public class BoardManager : MonoBehaviour
     [SerializeField]
     private Camera theCamera;
 
+    private bool IsPainting;
     private bool IsAllPainting;
     private int CurPixelColorNum;
-    private string[,] PixelValues;
     private int[,] CurBoardPixelNum;
+
+    private string[,] PixelValues;
     private GameObject[,] CurBoardPixel;
 
     private PixelInfo TmpPixel;
     private RaycastHit HitInfo;
     private Stack<PixelInfo> PreBoardPixel;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -111,18 +114,19 @@ public class BoardManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
             TmpPixel = new PixelInfo();
-        else if(Input.GetMouseButtonUp(0))
+        else if(Input.GetMouseButtonUp(0) && IsPainting)
         {
-            if (PreBoardPixel.Count > 5)
+            if (PreBoardPixel.Count > 7)
                 PreBoardPixel.Pop();
-            else
-                PreBoardPixel.Push(TmpPixel);
+
+            PreBoardPixel.Push(TmpPixel);
+            IsPainting = false;
         }
 
         if(Input.GetMouseButton(0))
         {
             Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
-            Debug.DrawRay(ray.origin, ray.direction, Color.green);
+
             if (Physics.Raycast(ray, out HitInfo, 100f))
             {
                 string[] _nums = HitInfo.transform.name.Split('_');
@@ -144,6 +148,7 @@ public class BoardManager : MonoBehaviour
                     }
                     else
                         paintPixel(_row, _col, CurPixelColorNum, true);
+                    IsPainting = true;
                 }
             }
         }
@@ -151,7 +156,7 @@ public class BoardManager : MonoBehaviour
 
     private void ReversePixel()
     {
-        if(Input.GetKeyDown(KeyCode.Z))
+        if(Input.GetKeyDown(KeyCode.Z) && PreBoardPixel.Count > 0)
         {
             PixelInfo recentPixel = PreBoardPixel.Pop();
 
@@ -176,6 +181,7 @@ public class BoardManager : MonoBehaviour
         int[,] _dir = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
         bool[,] _visit = new bool[BoardSize, BoardSize];
 
+        TmpPixel = new PixelInfo();
         que.Enqueue(new Pixel(_x, _y, 0));
 
         int nx, ny;
@@ -203,6 +209,8 @@ public class BoardManager : MonoBehaviour
                 }
             }
         }
+
+        PreBoardPixel.Push(TmpPixel);
         Debug.Log("End!");
     }
 
