@@ -15,8 +15,6 @@ IMG_WIDTH = 64
 IMG_HEIGHT = 64
 LAMBDA = 100
 
-
-
 def downsample(filters, size, apply_batchnorm=True):
     initializer = tf.random_normal_initializer(0., 0.02)
 
@@ -153,7 +151,7 @@ def initialize_pix2pix():
     generator_optimizer = tf.keras.optimizers.Adam(2e-4, beta_1=0.5)
     discriminator_optimizer = tf.keras.optimizers.Adam(2e-4, beta_1=0.5)
 
-    checkpoint_dir = './training_checkpoints'
+    checkpoint_dir = './Datas/training_checkpoints'
     checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt")
     checkpoint = tf.train.Checkpoint(generator_optimizer=generator_optimizer,
                                      discriminator_optimizer=discriminator_optimizer,
